@@ -4,6 +4,8 @@ import app.emailsender.application.core.GetItemHelper
 import app.emailsender.application.core.GetItemQueryHandler
 import app.emailsender.application.core.emailtypes.viewmodels.EmailTypeDTO
 import app.emailsender.application.core.emailtypes.viewmodels.EmailTypeViewModel
+import app.emailsender.application.core.extensions.getAuditFields
+import app.emailsender.application.interfaces.DateTimeHelper
 import app.emailsender.domain.emailtypes.EmailType
 import app.emailsender.persistence.mysql.repositories.EmailTypeRepository
 import org.springframework.stereotype.Service
@@ -12,7 +14,8 @@ import reactor.core.publisher.Mono
 
 @Service
 class GetEmailTypeQueryHandler(
-    private val emailTypeRepository: EmailTypeRepository
+    private val emailTypeRepository: EmailTypeRepository,
+    private val dateTimeHelper: DateTimeHelper
 ) : GetItemQueryHandler<GetEmailTypeQuery, EmailTypeViewModel>, GetItemHelper<EmailType, EmailTypeDTO> {
 
     override fun getItem(query: GetEmailTypeQuery): Mono<EmailTypeViewModel> {
@@ -29,11 +32,7 @@ class GetEmailTypeQueryHandler(
             description = entity.description,
         )
 
-        emailType.createdBy = emailType.createdBy
-        emailType.createdDate = emailType.createdDate
-        emailType.lastModifiedBy = emailType.lastModifiedBy
-        emailType.lastModifiedDate = emailType.lastModifiedDate
-
+        emailType.getAuditFields(entity, dateTimeHelper::resolveDate)
         return emailType
     }
 
