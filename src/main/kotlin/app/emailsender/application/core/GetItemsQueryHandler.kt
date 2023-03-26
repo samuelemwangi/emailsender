@@ -1,4 +1,4 @@
-package app.emailsender.application.core.interfaces
+package app.emailsender.application.core
 
 import reactor.core.publisher.Mono
 
