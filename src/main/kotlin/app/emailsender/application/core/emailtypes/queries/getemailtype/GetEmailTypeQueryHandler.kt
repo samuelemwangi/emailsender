@@ -4,7 +4,7 @@ import app.emailsender.application.core.GetItemHelper
 import app.emailsender.application.core.GetItemQueryHandler
 import app.emailsender.application.core.emailtypes.viewmodels.EmailTypeDTO
 import app.emailsender.application.core.emailtypes.viewmodels.EmailTypeViewModel
-import app.emailsender.application.core.extensions.getAuditFields
+import app.emailsender.application.core.extensions.setDtoAuditFields
 import app.emailsender.application.interfaces.DateTimeHelper
 import app.emailsender.domain.emailtypes.EmailType
 import app.emailsender.persistence.mysql.repositories.EmailTypeRepository
@@ -32,7 +32,7 @@ class GetEmailTypeQueryHandler(
             description = entity.description,
         )
 
-        emailType.getAuditFields(entity, dateTimeHelper::resolveDate)
+        emailType.setDtoAuditFields(entity, dateTimeHelper::resolveDate)
         return emailType
     }
 

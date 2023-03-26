@@ -4,7 +4,7 @@ import app.emailsender.application.core.BaseEntityDTO
 import app.emailsender.domain.BaseEntity
 import java.time.LocalDateTime
 
-fun BaseEntityDTO.getAuditFields(entity: BaseEntity, dateResolver: (LocalDateTime?) -> String) {
+fun BaseEntityDTO.setDtoAuditFields(entity: BaseEntity, dateResolver: (LocalDateTime?) -> String) {
     this.createdAt = dateResolver(entity.createdAt)
     this.createdBy = entity.createdBy ?: ""
     this.updatedAt = dateResolver(entity.updatedAt)
