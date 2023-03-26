@@ -66,6 +66,7 @@ class EmailTypeController(
 
     @PostMapping("")
     fun createItem(@Valid @RequestBody command: CreateEmailTypeCommand): Mono<ResponseEntity<EmailTypeViewModel>> {
+
         return createEmailTypeCommandHandler.createItem(command)
             .map {
                 it.resolveRequestStatus(RequestStatus.SUCCESSFUL)
@@ -78,3 +79,5 @@ class EmailTypeController(
     }
 
 }
+
+

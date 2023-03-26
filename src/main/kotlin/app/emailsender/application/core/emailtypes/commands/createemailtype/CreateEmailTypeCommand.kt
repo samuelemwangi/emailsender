@@ -1,9 +1,9 @@
 package app.emailsender.application.core.emailtypes.commands.createemailtype
 
 import app.emailsender.application.core.BaseCommand
-import javax.validation.constraints.NotNull
+import javax.validation.constraints.NotBlank
 
 data class CreateEmailTypeCommand(
-    @field:NotNull val type: String,
-    @field:NotNull val description: String
+    @NotBlank var type: String,
+    @NotBlank var description: String
 ) : BaseCommand()

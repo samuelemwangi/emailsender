@@ -37,31 +37,33 @@ class RestExceptionHandler(
         exchange.response.headers.contentType = MediaType.APPLICATION_JSON
         var errorMessage: String? = null
 
-        if (ex is RecordExistsException) {
-            exchange.response.statusCode = HttpStatus.CONFLICT
-        } else if (ex is NoRecordException) {
-            exchange.response.statusCode = HttpStatus.NOT_FOUND
-        } else if (ex is InvalidOperationException) {
-            exchange.response.statusCode = HttpStatus.NOT_ACCEPTABLE
-        } else if (ex is WebExchangeBindException) {
-            exchange.response.statusCode = HttpStatus.BAD_REQUEST
-            errorMessage = getValidationErrors(ex)
-        } else if (ex is ServerWebInputException) {
-            exchange.response.statusCode = HttpStatus.BAD_REQUEST
-            errorMessage = sanitizeWebInputException(exchange.request, ex)
-        } else if (ex is MethodNotAllowedException) {
-            exchange.response.statusCode = HttpStatus.METHOD_NOT_ALLOWED
-        } else if (ex is ResponseStatusException) {
-            try {
-                exchange.response.statusCode = HttpStatus.valueOf(ex.rawStatusCode)
-            } catch (e: Exception) {
-                exchange.response.statusCode = HttpStatus.INTERNAL_SERVER_ERROR
+        when (ex) {
+            is RecordExistsException -> exchange.response.statusCode = HttpStatus.CONFLICT
+            is NoRecordException -> exchange.response.statusCode = HttpStatus.NOT_FOUND
+            is InvalidOperationException -> exchange.response.statusCode = HttpStatus.NOT_ACCEPTABLE
+            is WebExchangeBindException -> {
+                exchange.response.statusCode = HttpStatus.BAD_REQUEST
+                errorMessage = getValidationErrors(ex)
             }
-        } else if (ex is DatabaseOperationException) {
-            exchange.response.statusCode = HttpStatus.INTERNAL_SERVER_ERROR
-        } else {
-            exchange.response.statusCode = HttpStatus.INTERNAL_SERVER_ERROR
+
+            is ServerWebInputException -> {
+                exchange.response.statusCode = HttpStatus.BAD_REQUEST
+                errorMessage = sanitizeWebInputException(exchange.request, ex)
+            }
+
+            is MethodNotAllowedException -> exchange.response.statusCode = HttpStatus.METHOD_NOT_ALLOWED
+            is ResponseStatusException -> {
+                try {
+                    exchange.response.statusCode = HttpStatus.valueOf(ex.rawStatusCode)
+                } catch (e: Exception) {
+                    exchange.response.statusCode = HttpStatus.INTERNAL_SERVER_ERROR
+                }
+            }
+
+            is DatabaseOperationException -> exchange.response.statusCode = HttpStatus.INTERNAL_SERVER_ERROR
+            else -> exchange.response.statusCode = HttpStatus.INTERNAL_SERVER_ERROR
         }
+
         errorMessage = errorMessage ?: ex.message
 
 

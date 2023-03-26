@@ -5,6 +5,7 @@ import app.emailsender.application.core.GetItemQueryHandler
 import app.emailsender.application.core.emailtypes.viewmodels.EmailTypeDTO
 import app.emailsender.application.core.emailtypes.viewmodels.EmailTypeViewModel
 import app.emailsender.application.core.extensions.setDtoAuditFields
+import app.emailsender.application.exceptions.NoRecordException
 import app.emailsender.application.interfaces.DateTimeHelper
 import app.emailsender.domain.emailtypes.EmailType
 import app.emailsender.persistence.mysql.repositories.EmailTypeRepository
@@ -20,6 +21,7 @@ class GetEmailTypeQueryHandler(
 
     override fun getItem(query: GetEmailTypeQuery): Mono<EmailTypeViewModel> {
         return emailTypeRepository.findById(query.id)
+            .switchIfEmpty(Mono.error(NoRecordException("${query.id}", "email type" )))
             .map { toDto(it) }
             .map { toViewModel(it) }
     }
