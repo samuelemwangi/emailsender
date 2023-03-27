@@ -16,12 +16,14 @@ import app.emailsender.application.core.interfaces.GetItemsQueryHandler
 import app.emailsender.application.enums.EntityTypes
 import app.emailsender.application.enums.ItemStatusMessage
 import app.emailsender.application.enums.RequestStatus
+import app.emailsender.presentation.helpers.AppHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Mono
@@ -36,7 +38,11 @@ class EmailTypeController(
 ) {
 
     @GetMapping("")
-    fun getItems(): Mono<ResponseEntity<EmailTypesViewModel>> {
+    fun getItems(
+        @RequestHeader(AppHeaders.X_USER_ID, required = false) userId: String?,
+        @RequestHeader(AppHeaders.X_USER_SCOPES, required = false) userScopes: String?
+    ): Mono<ResponseEntity<EmailTypesViewModel>> {
+
         val query = GetEmailTypesQuery()
 
         return getEmailTypesQueryHandler.getItems(query)
@@ -44,14 +50,19 @@ class EmailTypeController(
                 it.resolveRequestStatus(RequestStatus.SUCCESSFUL)
                 it.resolveStatusMessage(ItemStatusMessage.SUCCESS)
 
-                it.resolveCreateDownloadRights(null, EntityTypes.EMAIL_TYPE.labelText)
+                it.resolveCreateDownloadRights(userScopes, EntityTypes.EMAIL_TYPE.labelText)
                 ResponseEntity(it, HttpStatus.OK)
             }
     }
 
 
     @GetMapping("{id}")
-    fun getItem(@PathVariable("id") id: Int): Mono<ResponseEntity<EmailTypeViewModel>> {
+    fun getItem(
+        @PathVariable("id") id: Int,
+        @RequestHeader(AppHeaders.X_USER_ID, required = false) userId: String?,
+        @RequestHeader(AppHeaders.X_USER_SCOPES, required = false) userScopes: String?
+    ): Mono<ResponseEntity<EmailTypeViewModel>> {
+
         val query = GetEmailTypeQuery(id)
 
         return getEmailTypeQueryHandler.getItem(query)
@@ -59,22 +70,28 @@ class EmailTypeController(
                 it.resolveRequestStatus(RequestStatus.SUCCESSFUL)
                 it.resolveStatusMessage(ItemStatusMessage.SUCCESS)
 
-                val isLoggedUserOwner = it.emailType.ownedByLoggedInUser(null)
-                it.resolveEditDeleteRights(null, EntityTypes.EMAIL_TYPE.labelText, isLoggedUserOwner)
+                val loggedInUserIsOwner = it.emailType.ownedByLoggedInUser(userId)
+                it.resolveEditDeleteRights(userScopes, EntityTypes.EMAIL_TYPE.labelText, loggedInUserIsOwner)
                 ResponseEntity(it, HttpStatus.OK)
             }
     }
 
     @PostMapping("")
-    fun createItem(@Valid @RequestBody command: CreateEmailTypeCommand): Mono<ResponseEntity<EmailTypeViewModel>> {
+    fun createItem(
+        @Valid @RequestBody command: CreateEmailTypeCommand,
+        @RequestHeader(AppHeaders.X_USER_ID, required = false) userId: String?,
+        @RequestHeader(AppHeaders.X_USER_SCOPES, required = false) userScopes: String?
+    ): Mono<ResponseEntity<EmailTypeViewModel>> {
+
+        command.userId = userId
 
         return createEmailTypeCommandHandler.createItem(command)
             .map {
                 it.resolveRequestStatus(RequestStatus.SUCCESSFUL)
                 it.resolveStatusMessage(ItemStatusMessage.SUCCESS)
 
-                val isLoggedUserOwner = it.emailType.ownedByLoggedInUser(null)
-                it.resolveEditDeleteRights(null, EntityTypes.EMAIL_TYPE.labelText, isLoggedUserOwner)
+                val loggedInUserIsOwner = it.emailType.ownedByLoggedInUser(userId)
+                it.resolveEditDeleteRights(userScopes, EntityTypes.EMAIL_TYPE.labelText, loggedInUserIsOwner)
                 ResponseEntity(it, HttpStatus.OK)
             }
     }

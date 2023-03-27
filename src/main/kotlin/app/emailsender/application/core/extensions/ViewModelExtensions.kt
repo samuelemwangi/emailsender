@@ -16,12 +16,12 @@ fun BaseViewModel.resolveStatusMessage(statusMessage: ItemStatusMessage, customM
 }
 
 
-fun ItemDetailBaseViewModel.resolveEditDeleteRights(userRoleClaims: String?, entity: String, isLoggedInUser: Boolean) {
-   this.editEnabled = isLoggedInUser || userRoleClaims?.lowercase()?.contains(entity.lowercase() + ":edit") == true
-   this.deleteEnabled = isLoggedInUser || userRoleClaims?.lowercase()?.contains(entity.lowercase() + ":delete") == true
+fun ItemDetailBaseViewModel.resolveEditDeleteRights(userScopes: String?, entity: String, isLoggedInUser: Boolean) {
+    this.editEnabled = isLoggedInUser || userScopes?.lowercase()?.contains(entity.lowercase() + ":edit") == true
+    this.deleteEnabled = isLoggedInUser || userScopes?.lowercase()?.contains(entity.lowercase() + ":delete") == true
 }
 
-fun ItemsBaseViewModel.resolveCreateDownloadRights(userRoleClaims: String?, entity: String) {
-    this.createEnabled = userRoleClaims?.lowercase()?.contains(entity.lowercase() + ":create") == true
-    this.downloadEnabled = userRoleClaims?.lowercase()?.contains(entity.lowercase() + ":download") == true
+fun ItemsBaseViewModel.resolveCreateDownloadRights(userScopes: String?, entity: String) {
+    this.createEnabled = userScopes?.lowercase()?.contains(entity.lowercase() + ":create") == true
+    this.downloadEnabled = userScopes?.lowercase()?.contains(entity.lowercase() + ":download") == true
 }
