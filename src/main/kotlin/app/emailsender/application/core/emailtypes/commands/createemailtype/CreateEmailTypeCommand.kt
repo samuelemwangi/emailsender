@@ -4,6 +4,6 @@ import app.emailsender.application.core.BaseCommand
 import javax.validation.constraints.NotBlank
 
 data class CreateEmailTypeCommand(
-    @NotBlank var type: String,
+     var type: String,
     @NotBlank var description: String
 ) : BaseCommand()

@@ -21,7 +21,7 @@ import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.ServerWebInputException
 import org.springframework.web.server.WebExceptionHandler
 import reactor.core.publisher.Mono
-import java.util.*
+import java.util.Locale
 
 
 @Component
@@ -66,7 +66,6 @@ class RestExceptionHandler(
         errorMessage = errorMessage ?: ex.message
 
 
-
         return exchange
             .response
             .writeWith(transformError(errorMessage!!, exchange))
@@ -75,24 +74,40 @@ class RestExceptionHandler(
     private fun sanitizeWebInputException(ex: ServerWebInputException): String? {
         var message = ex.reason
         val cause = ex.cause
-        val defaultMessage = "A JSON decoding error occurred. Kindly check your request"
+        val defaultMessage = "An error occurred while processing the request"
+
         if (cause != null) {
-            val causeMessage = cause.message
-            val causeMessageCaps = causeMessage!!.uppercase(Locale.getDefault())
+            val causeMessage = cause.message ?: return defaultMessage
+
+            val causeMessageCaps = causeMessage.uppercase(Locale.getDefault())
+
             if (causeMessageCaps.contains("DECODING") && causeMessageCaps.contains("JSON")) {
                 try {
                     val errorMessage = causeMessage.substring(0, causeMessage.lastIndexOf("; nested exception is"))
-                    message =
-                        if (errorMessage.lastIndexOf("DecodingException:") == -1) errorMessage else errorMessage.substring(
-                            errorMessage.lastIndexOf("DecodingException:")
-                        )
+
+                    val exceptionIndex = errorMessage.lastIndexOf("DecodingException:")
+
+                    message = if (exceptionIndex == -1) errorMessage else errorMessage.substring(exceptionIndex)
+
                     if (message.contains("Cannot deserialize value of type")) {
-                        message = ("JSON decoding error: Cannot deserialize value"
-                                + message.substring(message.indexOf("` from") + 1))
-                    } else if (message.contains("JSON decoding error:") && (message.contains("`com.") || message.contains(
-                            "io."
-                        ))
-                    ) message = defaultMessage
+                        message =
+                            "Cannot deserialize value${message.substring(message.indexOf(" from") + 1)}"
+                    }
+
+                    if (message.contains("JSON decoding error: Instantiation of")) {
+                        val targetSection = message.substring(
+                            message.indexOf("JSON property") + 14,
+                            message.indexOf("due to missing") - 1
+                        )
+                        message = "Property '$targetSection' is required"
+                    }
+
+                    if (message.contains("JSON decoding error:") && (message.contains("app.") || message.contains("io."))) {
+                        message = defaultMessage
+                    }
+
+                    if (message == ex.reason) message = defaultMessage
+
                 } catch (e: Exception) {
                     message = defaultMessage
                 }
