@@ -13,6 +13,7 @@ import app.emailsender.application.core.extensions.resolveStatusMessage
 import app.emailsender.application.core.interfaces.CreateItemCommandHandler
 import app.emailsender.application.core.interfaces.GetItemQueryHandler
 import app.emailsender.application.core.interfaces.GetItemsQueryHandler
+import app.emailsender.application.enums.EntityTypes
 import app.emailsender.application.enums.ItemStatusMessage
 import app.emailsender.application.enums.RequestStatus
 import org.springframework.http.HttpStatus
@@ -43,7 +44,7 @@ class EmailTypeController(
                 it.resolveRequestStatus(RequestStatus.SUCCESSFUL)
                 it.resolveStatusMessage(ItemStatusMessage.SUCCESS)
 
-                it.resolveCreateDownloadRights(null, "EmailType")
+                it.resolveCreateDownloadRights(null, EntityTypes.EMAIL_TYPE.labelText)
                 ResponseEntity(it, HttpStatus.OK)
             }
     }
@@ -59,7 +60,7 @@ class EmailTypeController(
                 it.resolveStatusMessage(ItemStatusMessage.SUCCESS)
 
                 val isLoggedUserOwner = it.emailType.ownedByLoggedInUser(null)
-                it.resolveEditDeleteRights(null, "EmailType", isLoggedUserOwner)
+                it.resolveEditDeleteRights(null, EntityTypes.EMAIL_TYPE.labelText, isLoggedUserOwner)
                 ResponseEntity(it, HttpStatus.OK)
             }
     }
@@ -73,7 +74,7 @@ class EmailTypeController(
                 it.resolveStatusMessage(ItemStatusMessage.SUCCESS)
 
                 val isLoggedUserOwner = it.emailType.ownedByLoggedInUser(null)
-                it.resolveEditDeleteRights(null, "EmailType", isLoggedUserOwner)
+                it.resolveEditDeleteRights(null, EntityTypes.EMAIL_TYPE.labelText, isLoggedUserOwner)
                 ResponseEntity(it, HttpStatus.OK)
             }
     }
