@@ -1,8 +1,5 @@
 package app.emailsender.presentation.controllers
 
-import app.emailsender.application.core.CreateItemCommandHandler
-import app.emailsender.application.core.GetItemQueryHandler
-import app.emailsender.application.core.GetItemsQueryHandler
 import app.emailsender.application.core.emailtypes.commands.createemailtype.CreateEmailTypeCommand
 import app.emailsender.application.core.emailtypes.queries.getemailtype.GetEmailTypeQuery
 import app.emailsender.application.core.emailtypes.queries.getemailtypes.GetEmailTypesQuery
@@ -13,6 +10,9 @@ import app.emailsender.application.core.extensions.resolveCreateDownloadRights
 import app.emailsender.application.core.extensions.resolveEditDeleteRights
 import app.emailsender.application.core.extensions.resolveRequestStatus
 import app.emailsender.application.core.extensions.resolveStatusMessage
+import app.emailsender.application.core.interfaces.CreateItemCommandHandler
+import app.emailsender.application.core.interfaces.GetItemQueryHandler
+import app.emailsender.application.core.interfaces.GetItemsQueryHandler
 import app.emailsender.application.enums.ItemStatusMessage
 import app.emailsender.application.enums.RequestStatus
 import org.springframework.http.HttpStatus

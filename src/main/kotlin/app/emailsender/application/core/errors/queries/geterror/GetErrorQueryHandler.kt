@@ -1,7 +1,7 @@
 package app.emailsender.application.core.errors.queries.geterror
 
-import app.emailsender.application.core.GetItemHelper
-import app.emailsender.application.core.GetItemQueryHandler
+import app.emailsender.application.core.interfaces.GetItemHelper
+import app.emailsender.application.core.interfaces.GetItemQueryHandler
 import app.emailsender.application.core.errors.viewmodels.ErrorDTO
 import app.emailsender.application.core.errors.viewmodels.ErrorViewModel
 import app.emailsender.application.core.extensions.resolveRequestStatus

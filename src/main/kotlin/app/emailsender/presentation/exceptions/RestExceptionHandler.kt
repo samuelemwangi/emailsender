@@ -1,8 +1,8 @@
 package app.emailsender.presentation.exceptions
 
-import app.emailsender.application.core.GetItemQueryHandler
 import app.emailsender.application.core.errors.queries.geterror.GetErrorQuery
 import app.emailsender.application.core.errors.viewmodels.ErrorViewModel
+import app.emailsender.application.core.interfaces.GetItemQueryHandler
 import app.emailsender.application.exceptions.DatabaseOperationException
 import app.emailsender.application.exceptions.InvalidOperationException
 import app.emailsender.application.exceptions.NoRecordException
@@ -13,7 +13,6 @@ import org.springframework.core.annotation.Order
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.http.server.reactive.ServerHttpRequest
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.support.WebExchangeBindException
 import org.springframework.web.server.MethodNotAllowedException
@@ -48,7 +47,7 @@ class RestExceptionHandler(
 
             is ServerWebInputException -> {
                 exchange.response.statusCode = HttpStatus.BAD_REQUEST
-                errorMessage = sanitizeWebInputException(exchange.request, ex)
+                errorMessage = sanitizeWebInputException(ex)
             }
 
             is MethodNotAllowedException -> exchange.response.statusCode = HttpStatus.METHOD_NOT_ALLOWED
@@ -73,7 +72,7 @@ class RestExceptionHandler(
             .writeWith(transformError(errorMessage!!, exchange))
     }
 
-    private fun sanitizeWebInputException(httpRequest: ServerHttpRequest, ex: ServerWebInputException): String? {
+    private fun sanitizeWebInputException(ex: ServerWebInputException): String? {
         var message = ex.reason
         val cause = ex.cause
         val defaultMessage = "A JSON decoding error occurred. Kindly check your request"

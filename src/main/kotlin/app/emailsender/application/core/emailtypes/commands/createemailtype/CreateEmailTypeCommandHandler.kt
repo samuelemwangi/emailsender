@@ -1,9 +1,9 @@
 package app.emailsender.application.core.emailtypes.commands.createemailtype
 
-import app.emailsender.application.core.CreateItemCommandHandler
-import app.emailsender.application.core.GetItemQueryHandler
 import app.emailsender.application.core.emailtypes.queries.getemailtype.GetEmailTypeQuery
 import app.emailsender.application.core.emailtypes.viewmodels.EmailTypeViewModel
+import app.emailsender.application.core.interfaces.CreateItemCommandHandler
+import app.emailsender.application.core.interfaces.GetItemQueryHandler
 import app.emailsender.application.exceptions.RecordExistsException
 import app.emailsender.application.interfaces.DateTimeHelper
 import app.emailsender.domain.emailtypes.EmailType
@@ -20,7 +20,7 @@ class CreateEmailTypeCommandHandler(
 ) : CreateItemCommandHandler<CreateEmailTypeCommand, EmailTypeViewModel> {
 
     override fun createItem(command: CreateEmailTypeCommand): Mono<EmailTypeViewModel> {
-        val emailType = emailTypeRepository.findByType(command.type!!).toFuture().get();
+        val emailType = emailTypeRepository.findByType(command.type).toFuture().get()
         if (emailType != null) {
             throw RecordExistsException(command.type, "email type")
         }

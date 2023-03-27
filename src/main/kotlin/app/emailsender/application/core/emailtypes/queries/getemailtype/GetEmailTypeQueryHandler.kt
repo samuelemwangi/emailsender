@@ -1,7 +1,7 @@
 package app.emailsender.application.core.emailtypes.queries.getemailtype
 
-import app.emailsender.application.core.GetItemHelper
-import app.emailsender.application.core.GetItemQueryHandler
+import app.emailsender.application.core.interfaces.GetItemHelper
+import app.emailsender.application.core.interfaces.GetItemQueryHandler
 import app.emailsender.application.core.emailtypes.viewmodels.EmailTypeDTO
 import app.emailsender.application.core.emailtypes.viewmodels.EmailTypeViewModel
 import app.emailsender.application.core.extensions.setDtoAuditFields
