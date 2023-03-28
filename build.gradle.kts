@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.api.tasks.Copy
 
 plugins {
 	id("org.springframework.boot") version "2.7.10"
@@ -37,6 +38,12 @@ tasks.withType<KotlinCompile> {
 		jvmTarget = "17"
 	}
 }
+
+tasks.register<Copy>("copyDependencies") {
+	from(configurations.runtimeClasspath)
+	into("$buildDir/dependencies")
+}
+
 
 tasks.withType<Test> {
 	useJUnitPlatform()
