@@ -23,7 +23,7 @@ class UpdateEmailTypeCommandHandler(
         if (command.id == null) {
             throw IllegalArgumentException("Id cannot be null")
         }
-        var emailType = emailTypeRepository.findById(command.id!!).toFuture().get()
+        val emailType = emailTypeRepository.findById(command.id!!).toFuture().get()
             ?: throw NoRecordException("${command.id}", EntityTypes.EMAIL_TYPE.labelText)
 
         emailType.type = command.type ?: emailType.type
