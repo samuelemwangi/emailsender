@@ -1,6 +1,7 @@
 package app.emailsender.presentation.controllers
 
 import app.emailsender.application.core.emailtypes.commands.createemailtype.CreateEmailTypeCommand
+import app.emailsender.application.core.emailtypes.commands.updateemailtype.UpdateEmailTypeCommand
 import app.emailsender.application.core.emailtypes.queries.getemailtype.GetEmailTypeQuery
 import app.emailsender.application.core.emailtypes.queries.getemailtypes.GetEmailTypesQuery
 import app.emailsender.application.core.emailtypes.viewmodels.EmailTypeViewModel
@@ -13,6 +14,7 @@ import app.emailsender.application.core.extensions.resolveStatusMessage
 import app.emailsender.application.core.interfaces.CreateItemCommandHandler
 import app.emailsender.application.core.interfaces.GetItemQueryHandler
 import app.emailsender.application.core.interfaces.GetItemsQueryHandler
+import app.emailsender.application.core.interfaces.UpdateItemCommandHandler
 import app.emailsender.application.enums.EntityTypes
 import app.emailsender.application.enums.ItemStatusMessage
 import app.emailsender.application.enums.RequestStatus
@@ -20,6 +22,7 @@ import app.emailsender.presentation.helpers.AppHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -34,7 +37,8 @@ import javax.validation.Valid
 class EmailTypeController(
     private val getEmailTypeQueryHandler: GetItemQueryHandler<GetEmailTypeQuery, EmailTypeViewModel>,
     private val getEmailTypesQueryHandler: GetItemsQueryHandler<GetEmailTypesQuery, EmailTypesViewModel>,
-    private val createEmailTypeCommandHandler: CreateItemCommandHandler<CreateEmailTypeCommand, EmailTypeViewModel>
+    private val createEmailTypeCommandHandler: CreateItemCommandHandler<CreateEmailTypeCommand, EmailTypeViewModel>,
+    private val updateEmailTypeCommandHandler: UpdateItemCommandHandler<UpdateEmailTypeCommand, EmailTypeViewModel>
 ) {
 
     @GetMapping("")
@@ -94,6 +98,29 @@ class EmailTypeController(
                 it.resolveEditDeleteRights(userScopes, EntityTypes.EMAIL_TYPE.labelText, loggedInUserIsOwner)
                 ResponseEntity(it, HttpStatus.OK)
             }
+    }
+
+    @PatchMapping("{id}")
+    fun updateItem(
+        @PathVariable("id") id: Int,
+        @Valid @RequestBody command: UpdateEmailTypeCommand,
+        @RequestHeader(AppHeaders.X_USER_ID, required = false) userId: String?,
+        @RequestHeader(AppHeaders.X_USER_SCOPES, required = false) userScopes: String?
+    ): Mono<ResponseEntity<EmailTypeViewModel>>{
+
+        command.id = id
+        command.userId = userId
+
+        return updateEmailTypeCommandHandler.updateItem(command)
+            .map {
+                it.resolveRequestStatus(RequestStatus.SUCCESSFUL)
+                it.resolveStatusMessage(ItemStatusMessage.SUCCESS)
+
+                val loggedInUserIsOwner = it.emailType.ownedByLoggedInUser(userId)
+                it.resolveEditDeleteRights(userScopes, EntityTypes.EMAIL_TYPE.labelText, loggedInUserIsOwner)
+                ResponseEntity(it, HttpStatus.OK)
+            }
+
     }
 
 }

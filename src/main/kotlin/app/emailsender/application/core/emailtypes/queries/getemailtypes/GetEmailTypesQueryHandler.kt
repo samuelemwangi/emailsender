@@ -12,12 +12,12 @@ import reactor.core.publisher.Mono
 @Service
 class GetEmailTypesQueryHandler(
     private val emailTypeRepository: EmailTypeRepository,
-    private val getEmailTypeHelper: GetItemDTOHelper<EmailType, EmailTypeDTO>
+    private val getEmailTypeDTOHelper: GetItemDTOHelper<EmailType, EmailTypeDTO>
 ) : GetItemsQueryHandler<GetEmailTypesQuery, EmailTypesViewModel> {
 
     override fun getItems(query: GetEmailTypesQuery): Mono<EmailTypesViewModel> {
         return emailTypeRepository.findAll()
-            .map { getEmailTypeHelper.toDTO(it) }
+            .map { getEmailTypeDTOHelper.toDTO(it) }
             .collectList()
             .map { toViewModel(it) }
     }

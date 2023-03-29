@@ -2,6 +2,6 @@ package app.emailsender.application.core.interfaces
 
 import reactor.core.publisher.Mono
 
-interface GetItemQueryHandler<TQuery, TResult> {
-    fun getItem(query: TQuery): Mono<TResult>
+interface GetItemQueryHandler<TQuery, TViewModel> {
+    fun getItem(query: TQuery): Mono<TViewModel>
 }
