@@ -3,7 +3,7 @@ package app.emailsender.application.core.emailtypes.queries.getemailtype
 import app.emailsender.application.core.emailtypes.viewmodels.EmailTypeDTO
 import app.emailsender.application.core.emailtypes.viewmodels.EmailTypeViewModel
 import app.emailsender.application.core.extensions.setDtoAuditFields
-import app.emailsender.application.core.interfaces.GetItemHelper
+import app.emailsender.application.core.interfaces.GetItemDTOHelper
 import app.emailsender.application.core.interfaces.GetItemQueryHandler
 import app.emailsender.application.enums.EntityTypes
 import app.emailsender.application.exceptions.NoRecordException
@@ -18,16 +18,16 @@ import reactor.core.publisher.Mono
 class GetEmailTypeQueryHandler(
     private val emailTypeRepository: EmailTypeRepository,
     private val dateTimeHelper: DateTimeHelper
-) : GetItemQueryHandler<GetEmailTypeQuery, EmailTypeViewModel>, GetItemHelper<EmailType, EmailTypeDTO> {
+) : GetItemQueryHandler<GetEmailTypeQuery, EmailTypeViewModel>, GetItemDTOHelper<EmailType, EmailTypeDTO> {
 
     override fun getItem(query: GetEmailTypeQuery): Mono<EmailTypeViewModel> {
         return emailTypeRepository.findById(query.id)
             .switchIfEmpty(Mono.error(NoRecordException("${query.id}", EntityTypes.EMAIL_TYPE.labelText )))
-            .map { toDto(it) }
+            .map { toDTO(it) }
             .map { toViewModel(it) }
     }
 
-    override fun toDto(entity: EmailType): EmailTypeDTO {
+    override fun toDTO(entity: EmailType): EmailTypeDTO {
 
         val emailType = EmailTypeDTO(
             id = entity.id,
