@@ -1,4 +1,4 @@
-FROM gradle:7.3.3-jdk17 AS build
+FROM openjdk:17-alpine AS build
 WORKDIR /app
 COPY build.gradle.kts settings.gradle.kts gradlew /app/
 COPY gradle /app/gradle
@@ -14,13 +14,10 @@ RUN jlink \
 --output /jre \
 --add-modules ALL-MODULE-PATH
 
-FROM debian:buster-slim
 
-ENV JAVA_HOME=/opt/java/openjdk
-ENV PATH="${JAVA_HOME}/bin:${PATH}"
-
-COPY --from=build /jre $JAVA_HOME
+FROM alpine:3.16 AS runtime
 WORKDIR /app
-COPY --from=build /app/build/libs/*.jar app.jar
+COPY --from=build /jre /jre
+COPY --from=build /app/build/libs/*SNAPSHOT.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["/jre/bin/java", "-jar", "app.jar"]
