@@ -1,7 +1,3 @@
-CREATE DATABASE IF NOT EXISTS mail_manager;
-
-USE mail_manager;
-
 CREATE TABLE IF NOT EXISTS email_types (
   id INT AUTO_INCREMENT PRIMARY KEY,
   type VARCHAR(50),
