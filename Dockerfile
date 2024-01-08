@@ -15,8 +15,15 @@ RUN jlink \
 --add-modules ALL-MODULE-PATH
 
 
-FROM alpine:3.16 AS runtime
+FROM alpine:latest AS runtime
 WORKDIR /app
+
+RUN adduser --disabled-password \
+  --home /app \
+  --gecos '' appuser && chown -R appuser /app
+RUN apk upgrade musl
+
+USER appuser
 COPY --from=build /jre /jre
 COPY --from=build /app/build/libs/*SNAPSHOT.jar app.jar
 EXPOSE 8080
