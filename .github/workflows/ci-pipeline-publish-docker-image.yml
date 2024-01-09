@@ -23,7 +23,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ secrets.DOCKERHUB_USERNAME }}/emailsender
-          tags: latest
+          tags: type=semver,pattern={{version}}
 
       - name: Build and Push
         uses: docker/build-push-action@v4
@@ -32,3 +32,4 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
