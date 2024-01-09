@@ -20,8 +20,10 @@ class CreateEmailTypeCommandHandler(
     private val dateTimeHelper: DateTimeHelper
 ) : CreateItemCommandHandler<CreateEmailTypeCommand, EmailTypeViewModel> {
 
-    override fun createItem(command: CreateEmailTypeCommand): Mono<EmailTypeViewModel> {
+    override fun createItem(command: CreateEmailTypeCommand, userId: String?): Mono<EmailTypeViewModel> {
+
         val emailType = emailTypeRepository.findByType(command.type).toFuture().get()
+
         if (emailType != null) {
             throw RecordExistsException(command.type, EntityTypes.EMAIL_TYPE.labelText)
         }
@@ -29,9 +31,9 @@ class CreateEmailTypeCommandHandler(
         val newEmailType = EmailType(
             type = command.type,
             description = command.description
-        )
-
-        newEmailType.setAuditFields(command.userId, dateTimeHelper.getCurrentDateTime())
+        ).also {
+            it.setAuditFields(userId, dateTimeHelper.getCurrentDateTime())
+        }
 
         return emailTypeRepository.save(newEmailType)
             .map { getItemQueryHandler.getItem(GetEmailTypeQuery(it.id)) }

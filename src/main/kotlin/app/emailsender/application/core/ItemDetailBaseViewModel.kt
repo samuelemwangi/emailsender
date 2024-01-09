@@ -1,6 +1,6 @@
 package app.emailsender.application.core
 
-open class ItemDetailBaseViewModel(
+abstract class ItemDetailBaseViewModel(
     var editEnabled: Boolean = false,
-    var deleteEnabled: Boolean = false,
+    var deleteEnabled: Boolean = false
 ) : BaseViewModel()

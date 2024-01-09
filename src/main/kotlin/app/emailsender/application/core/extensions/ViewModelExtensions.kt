@@ -15,7 +15,6 @@ fun BaseViewModel.resolveStatusMessage(statusMessage: ItemStatusMessage, customM
     this.statusMessage = customMessage ?: statusMessage.labelText
 }
 
-
 fun ItemDetailBaseViewModel.resolveEditDeleteRights(userScopes: String?, entity: String, isLoggedInUser: Boolean) {
     this.editEnabled = isLoggedInUser || userScopes?.lowercase()?.contains(entity.lowercase() + ":edit") == true
     this.deleteEnabled = isLoggedInUser || userScopes?.lowercase()?.contains(entity.lowercase() + ":delete") == true

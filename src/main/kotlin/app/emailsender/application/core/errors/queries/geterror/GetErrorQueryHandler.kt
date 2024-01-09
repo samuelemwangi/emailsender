@@ -28,13 +28,15 @@ class GetErrorQueryHandler(
     }
 
     private fun toViewModel(query: GetErrorQuery): ErrorViewModel {
-        val errorDetail = toDTO(query)
-        val errorVM = ErrorViewModel(error = errorDetail)
-        errorVM.resolveRequestStatus(RequestStatus.FAILED)
-        errorVM.resolveStatusMessage(
-            ItemStatusMessage.FAILED,
-            query.httpStatus.toString().replace(" ", " - ").replace("_", " ")
-        )
-        return errorVM
+
+        return ErrorViewModel(
+            error = toDTO(query)
+        ).also {
+            it.resolveRequestStatus(RequestStatus.FAILED)
+            it.resolveStatusMessage(
+                ItemStatusMessage.FAILED,
+                query.httpStatus.toString().replace(" ", " - ").replace("_", " ")
+            )
+        }
     }
 }

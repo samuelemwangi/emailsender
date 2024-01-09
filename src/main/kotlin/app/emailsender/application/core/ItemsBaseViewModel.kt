@@ -1,6 +1,6 @@
 package app.emailsender.application.core
 
-open class ItemsBaseViewModel(
+abstract class ItemsBaseViewModel(
     var createEnabled: Boolean = false,
-    var downloadEnabled: Boolean = false,
+    var downloadEnabled: Boolean = false
 ) : BaseViewModel()

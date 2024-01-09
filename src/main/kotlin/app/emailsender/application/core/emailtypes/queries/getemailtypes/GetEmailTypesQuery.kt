@@ -1,3 +1,5 @@
 package app.emailsender.application.core.emailtypes.queries.getemailtypes
 
-class GetEmailTypesQuery
+import app.emailsender.application.BaseQuery
+
+class GetEmailTypesQuery: BaseQuery()

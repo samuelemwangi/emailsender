@@ -22,21 +22,20 @@ class GetEmailTypeQueryHandler(
 
     override fun getItem(query: GetEmailTypeQuery): Mono<EmailTypeViewModel> {
         return emailTypeRepository.findById(query.id)
-            .switchIfEmpty(Mono.error(NoRecordException("${query.id}", EntityTypes.EMAIL_TYPE.labelText )))
+            .switchIfEmpty(Mono.error(NoRecordException("${query.id}", EntityTypes.EMAIL_TYPE.labelText)))
             .map { toDTO(it) }
             .map { toViewModel(it) }
     }
 
     override fun toDTO(entity: EmailType): EmailTypeDTO {
 
-        val emailType = EmailTypeDTO(
+        return EmailTypeDTO(
             id = entity.id,
             type = entity.type,
             description = entity.description,
-        )
-
-        emailType.setDtoAuditFields(entity, dateTimeHelper::resolveDate)
-        return emailType
+        ).also {
+            it.setDtoAuditFields(entity, dateTimeHelper::resolveDate)
+        }
     }
 
     private fun toViewModel(dto: EmailTypeDTO): EmailTypeViewModel {
