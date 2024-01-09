@@ -1,10 +1,10 @@
-FROM openjdk:17-alpine AS build
+FROM gradle:8.5-jdk17-alpine AS build
 WORKDIR /app
 COPY build.gradle.kts settings.gradle.kts gradlew /app/
 COPY gradle /app/gradle
-RUN ./gradlew dependencies
+RUN gradle dependencies
 COPY . .
-RUN ./gradlew build --no-daemon -x test
+RUN gradle build --no-daemon -x test
 
 RUN jlink \
 --compress 2 \
@@ -15,8 +15,15 @@ RUN jlink \
 --add-modules ALL-MODULE-PATH
 
 
-FROM alpine:3.16 AS runtime
+FROM alpine:latest AS runtime
 WORKDIR /app
+
+RUN adduser --disabled-password \
+  --home /app \
+  --gecos '' appuser && chown -R appuser /app
+RUN apk upgrade musl
+
+USER appuser
 COPY --from=build /jre /jre
 COPY --from=build /app/build/libs/*SNAPSHOT.jar app.jar
 EXPOSE 8080

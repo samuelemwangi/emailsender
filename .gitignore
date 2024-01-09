@@ -35,3 +35,9 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# Docker mounts
+mounts/
+
+# Ignore .env file
+.env
