@@ -16,17 +16,14 @@ import reactor.core.publisher.Mono
 @Service
 class CreateEmailTypeCommandHandler(
     private val emailTypeRepository: EmailTypeRepository,
-    private val getItemQueryHandler: GetItemQueryHandler<GetEmailTypeQuery, EmailTypeViewModel>,
-    private val dateTimeHelper: DateTimeHelper
+    private val dateTimeHelper: DateTimeHelper,
+    private val getItemQueryHandler: GetItemQueryHandler<GetEmailTypeQuery, EmailTypeViewModel>
 ) : CreateItemCommandHandler<CreateEmailTypeCommand, EmailTypeViewModel> {
 
     override fun createItem(command: CreateEmailTypeCommand, userId: String?): Mono<EmailTypeViewModel> {
 
-        val emailType = emailTypeRepository.findByType(command.type).toFuture().get()
-
-        if (emailType != null) {
-            throw RecordExistsException(command.type, EntityTypes.EMAIL_TYPE.labelText)
-        }
+        emailTypeRepository.findByType(command.type).toFuture().get()
+            ?: throw RecordExistsException(command.type, EntityTypes.EMAIL_TYPE.labelText)
 
         val newEmailType = EmailType(
             type = command.type,

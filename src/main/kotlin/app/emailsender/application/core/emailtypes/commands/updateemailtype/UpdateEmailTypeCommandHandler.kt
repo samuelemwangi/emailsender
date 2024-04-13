@@ -26,7 +26,7 @@ class UpdateEmailTypeCommandHandler(
             throw BadRequestException("Kindly provide a valid ${EntityTypes.EMAIL_TYPE.labelText} Id")
         }
 
-        val emailType = emailTypeRepository.findById(command.id).toFuture().get()
+        val emailType = emailTypeRepository.findById(command.id!!).toFuture().get()
             ?: throw NoRecordException("${command.id}", EntityTypes.EMAIL_TYPE.labelText)
 
         emailType.type = command.type ?: emailType.type

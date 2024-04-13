@@ -1,9 +1,9 @@
 package app.emailsender.application.core.errors.queries.geterror
 
 import app.emailsender.application.BaseQuery
-import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatusCode
 
 class GetErrorQuery(
     val errorMessage: String,
-    val httpStatus: HttpStatus
+    val httpStatus: HttpStatusCode
 ): BaseQuery()

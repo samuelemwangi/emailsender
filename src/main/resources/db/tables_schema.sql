@@ -6,5 +6,5 @@ CREATE TABLE IF NOT EXISTS email_types (
   created_by VARCHAR(36),
   updated_at TIMESTAMP,
   updated_by VARCHAR(36),
-  deleted_at TIMESTAMP
+  is_deleted TINYINT(1) DEFAULT 0
 );

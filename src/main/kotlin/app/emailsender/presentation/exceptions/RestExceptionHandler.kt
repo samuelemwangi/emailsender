@@ -23,14 +23,12 @@ import org.springframework.web.server.WebExceptionHandler
 import reactor.core.publisher.Mono
 import java.util.Locale
 
-
 @Component
 @Order(-2)
 class RestExceptionHandler(
     private val getErrorQueryHandler: GetItemQueryHandler<GetErrorQuery, ErrorViewModel>,
     private val objectMapper: ObjectMapper
 ) : WebExceptionHandler {
-
 
     override fun handle(exchange: ServerWebExchange, ex: Throwable): Mono<Void> {
         exchange.response.headers.contentType = MediaType.APPLICATION_JSON
@@ -53,7 +51,7 @@ class RestExceptionHandler(
             is MethodNotAllowedException -> exchange.response.statusCode = HttpStatus.METHOD_NOT_ALLOWED
             is ResponseStatusException -> {
                 try {
-                    exchange.response.statusCode = HttpStatus.valueOf(ex.rawStatusCode)
+                    exchange.response.statusCode = ex.statusCode
                 } catch (e: Exception) {
                     exchange.response.statusCode = HttpStatus.INTERNAL_SERVER_ERROR
                 }

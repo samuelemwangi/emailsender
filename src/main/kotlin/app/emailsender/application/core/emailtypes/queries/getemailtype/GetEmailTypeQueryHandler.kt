@@ -28,7 +28,6 @@ class GetEmailTypeQueryHandler(
     }
 
     override fun toDTO(entity: EmailType): EmailTypeDTO {
-
         return EmailTypeDTO(
             id = entity.id,
             type = entity.type,

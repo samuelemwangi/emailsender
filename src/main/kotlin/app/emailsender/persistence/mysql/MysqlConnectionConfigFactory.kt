@@ -1,7 +1,7 @@
 package app.emailsender.persistence.mysql
 
-import dev.miku.r2dbc.mysql.MySqlConnectionConfiguration
-import dev.miku.r2dbc.mysql.MySqlConnectionFactory
+import io.asyncer.r2dbc.mysql.MySqlConnectionConfiguration
+import io.asyncer.r2dbc.mysql.MySqlConnectionFactory
 import io.r2dbc.spi.ConnectionFactory
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean

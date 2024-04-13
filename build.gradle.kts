@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.gradle.api.tasks.Copy
 
 plugins {
     id("org.springframework.boot") version "3.2.4"
@@ -25,8 +24,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     implementation("org.springframework.kafka:spring-kafka")
     implementation("io.asyncer:r2dbc-mysql:1.1.0")
-    implementation("org.springdoc:springdoc-openapi-ui:1.8.0")
-    implementation("org.springdoc:springdoc-openapi-webflux-ui:1.8.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.5.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")

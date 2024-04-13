@@ -79,6 +79,8 @@ services:
       MYSQL_PASSWORD: ${COMPOSE_DB_USER_PASSWORD}
     networks:
       - services_network
+    ports:
+      - "3306:3306"
     restart: on-failure
 
   emailsender:
