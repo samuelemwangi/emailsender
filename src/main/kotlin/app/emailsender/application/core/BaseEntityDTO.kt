@@ -1,8 +1,8 @@
 package app.emailsender.application.core
 
-open class BaseEntityDTO(
-    var createdBy : String = "",
-    var createdAt : String = "",
-    var updatedBy : String = "",
-    var updatedAt : String = "",
+abstract class BaseEntityDTO(
+    var createdBy: String? = null,
+    var createdAt: String? = null,
+    var updatedBy: String? = null,
+    var updatedAt: String? = null
 )

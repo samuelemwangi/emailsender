@@ -1,9 +1,9 @@
 package app.emailsender.application.core.emailtypes.commands.createemailtype
 
-import app.emailsender.application.core.emailtypes.queries.getemailtype.GetEmailTypeQuery
+import app.emailsender.application.core.emailtypes.viewmodels.EmailTypeDTO
 import app.emailsender.application.core.emailtypes.viewmodels.EmailTypeViewModel
 import app.emailsender.application.core.interfaces.CreateItemCommandHandler
-import app.emailsender.application.core.interfaces.GetItemQueryHandler
+import app.emailsender.application.core.interfaces.GetItemDTOHelper
 import app.emailsender.application.enums.EntityTypes
 import app.emailsender.application.exceptions.RecordExistsException
 import app.emailsender.application.interfaces.DateTimeHelper
@@ -16,25 +16,25 @@ import reactor.core.publisher.Mono
 @Service
 class CreateEmailTypeCommandHandler(
     private val emailTypeRepository: EmailTypeRepository,
-    private val getItemQueryHandler: GetItemQueryHandler<GetEmailTypeQuery, EmailTypeViewModel>,
-    private val dateTimeHelper: DateTimeHelper
+    private val dateTimeHelper: DateTimeHelper,
+    private val getEmailTypeDTOHelper: GetItemDTOHelper<EmailType, EmailTypeDTO>
 ) : CreateItemCommandHandler<CreateEmailTypeCommand, EmailTypeViewModel> {
 
-    override fun createItem(command: CreateEmailTypeCommand): Mono<EmailTypeViewModel> {
-        val emailType = emailTypeRepository.findByType(command.type).toFuture().get()
-        if (emailType != null) {
+    override fun createItem(command: CreateEmailTypeCommand, userId: String?): Mono<EmailTypeViewModel> {
+
+        emailTypeRepository.findByType(command.type).toFuture().get()?.let {
             throw RecordExistsException(command.type, EntityTypes.EMAIL_TYPE.labelText)
         }
 
         val newEmailType = EmailType(
             type = command.type,
             description = command.description
-        )
-
-        newEmailType.setAuditFields(command.userId, dateTimeHelper.getCurrentDateTime())
+        ).also {
+            it.setAuditFields(userId, dateTimeHelper.getCurrentDateTime())
+        }
 
         return emailTypeRepository.save(newEmailType)
-            .map { getItemQueryHandler.getItem(GetEmailTypeQuery(it.id)) }
-            .flatMap { it }
+            .map { getEmailTypeDTOHelper.toDTO(it) }
+            .map { EmailTypeViewModel(it) }
     }
 }

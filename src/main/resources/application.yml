@@ -1,0 +1,22 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+    io.asyncer.r2dbc.mysql.QUERY: DEBUG
+    app.emailsender: DEBUG
+
+db:
+  mysql:
+    host: ${DB_SERVER}
+    port: ${DB_PORT}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    database: ${DB_NAME}
+    server-zone: ${DB_SERVER_ZONE}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

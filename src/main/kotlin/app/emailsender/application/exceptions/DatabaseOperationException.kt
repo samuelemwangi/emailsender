@@ -1,7 +1,10 @@
 package app.emailsender.application.exceptions
 
-class DatabaseOperationException (
+class DatabaseOperationException(
     message: String
 ) : RuntimeException(message) {
-    constructor(operation: String, className: String) : this("$className: An error occurred performing action - $operation")
+    constructor(
+        operation: String,
+        className: String
+    ) : this("$className: An error occurred performing action - $operation")
 }
