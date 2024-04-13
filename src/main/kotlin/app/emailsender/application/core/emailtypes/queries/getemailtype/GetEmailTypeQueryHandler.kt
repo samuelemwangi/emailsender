@@ -2,7 +2,7 @@ package app.emailsender.application.core.emailtypes.queries.getemailtype
 
 import app.emailsender.application.core.emailtypes.viewmodels.EmailTypeDTO
 import app.emailsender.application.core.emailtypes.viewmodels.EmailTypeViewModel
-import app.emailsender.application.core.extensions.setDtoAuditFields
+import app.emailsender.application.core.extensions.setDTOAuditFields
 import app.emailsender.application.core.interfaces.GetItemDTOHelper
 import app.emailsender.application.core.interfaces.GetItemQueryHandler
 import app.emailsender.application.enums.EntityTypes
@@ -18,7 +18,8 @@ import reactor.core.publisher.Mono
 class GetEmailTypeQueryHandler(
     private val emailTypeRepository: EmailTypeRepository,
     private val dateTimeHelper: DateTimeHelper
-) : GetItemQueryHandler<GetEmailTypeQuery, EmailTypeViewModel>, GetItemDTOHelper<EmailType, EmailTypeDTO> {
+) : GetItemQueryHandler<GetEmailTypeQuery, EmailTypeViewModel>,
+    GetItemDTOHelper<EmailType, EmailTypeDTO> {
 
     override fun getItem(query: GetEmailTypeQuery): Mono<EmailTypeViewModel> {
         return emailTypeRepository.findById(query.id)
@@ -33,7 +34,7 @@ class GetEmailTypeQueryHandler(
             type = entity.type,
             description = entity.description,
         ).also {
-            it.setDtoAuditFields(entity, dateTimeHelper::resolveDate)
+            it.setDTOAuditFields(entity, dateTimeHelper::resolveDate)
         }
     }
 

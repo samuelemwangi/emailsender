@@ -5,12 +5,15 @@ import app.emailsender.application.core.errors.viewmodels.ErrorViewModel
 import app.emailsender.application.core.interfaces.GetItemDTOHelper
 import app.emailsender.application.core.interfaces.GetItemQueryHandler
 import app.emailsender.application.enums.RequestStatus
+import app.emailsender.application.interfaces.DateTimeHelper
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 import java.time.Instant
 
 @Service
-class GetErrorQueryHandler() : GetItemQueryHandler<GetErrorQuery, ErrorViewModel>,
+class GetErrorQueryHandler(
+    private val dateTimeHelper: DateTimeHelper
+) : GetItemQueryHandler<GetErrorQuery, ErrorViewModel>,
     GetItemDTOHelper<GetErrorQuery, ErrorDTO> {
 
     override fun getItem(query: GetErrorQuery): Mono<ErrorViewModel> {
@@ -20,7 +23,7 @@ class GetErrorQueryHandler() : GetItemQueryHandler<GetErrorQuery, ErrorViewModel
     override fun toDTO(entity: GetErrorQuery): ErrorDTO {
         return ErrorDTO(
             message = entity.errorMessage,
-            timestamp = Instant.now()
+            timestamp = dateTimeHelper.getTimeStamp()
         )
     }
 

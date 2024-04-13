@@ -1,12 +1,12 @@
 package app.emailsender.presentation.controllers
 
 import app.emailsender.application.core.emailtypes.commands.createemailtype.CreateEmailTypeCommand
-import app.emailsender.application.core.emailtypes.commands.updateemailtype.UpdateEmailTypeCommand
+import app.emailsender.application.core.emailtypes.commands.deleteemailtype.DeleteEmailTypeCommand
 import app.emailsender.application.core.emailtypes.queries.getemailtype.GetEmailTypeQuery
 import app.emailsender.application.core.emailtypes.queries.getemailtypes.GetEmailTypesQuery
 import app.emailsender.application.core.emailtypes.viewmodels.EmailTypeViewModel
 import app.emailsender.application.core.emailtypes.viewmodels.EmailTypesViewModel
-import app.emailsender.application.core.extensions.ownedByLoggedInUser
+import app.emailsender.application.core.extensions.recordOwnedByCurrentUser
 import app.emailsender.application.core.extensions.resolveCreateDownloadRights
 import app.emailsender.application.core.extensions.resolveEditDeleteRights
 import app.emailsender.application.core.extensions.resolveRequestStatus
@@ -38,7 +38,7 @@ class EmailTypeController(
     private val getEmailTypeQueryHandler: GetItemQueryHandler<GetEmailTypeQuery, EmailTypeViewModel>,
     private val getEmailTypesQueryHandler: GetItemsQueryHandler<GetEmailTypesQuery, EmailTypesViewModel>,
     private val createEmailTypeCommandHandler: CreateItemCommandHandler<CreateEmailTypeCommand, EmailTypeViewModel>,
-    private val updateEmailTypeCommandHandler: UpdateItemCommandHandler<UpdateEmailTypeCommand, EmailTypeViewModel>
+    private val deleteEmailTypeCommandHandler: UpdateItemCommandHandler<DeleteEmailTypeCommand, EmailTypeViewModel>
 ) {
 
     @GetMapping("")
@@ -74,7 +74,7 @@ class EmailTypeController(
                 it.resolveRequestStatus(RequestStatus.SUCCESSFUL)
                 it.resolveStatusMessage(ItemStatusMessage.FETCH_ITEM_SUCCESSFUL)
 
-                val loggedInUserIsOwner = it.emailType.ownedByLoggedInUser(userId)
+                val loggedInUserIsOwner = it.emailType.recordOwnedByCurrentUser(userId)
                 it.resolveEditDeleteRights(userScopes, EntityTypes.EMAIL_TYPE.labelText, loggedInUserIsOwner)
                 ResponseEntity(it, HttpStatus.OK)
             }
@@ -92,7 +92,7 @@ class EmailTypeController(
                 it.resolveRequestStatus(RequestStatus.SUCCESSFUL)
                 it.resolveStatusMessage(ItemStatusMessage.CREATE_ITEM_SUCCESSFUL)
 
-                val loggedInUserIsOwner = it.emailType.ownedByLoggedInUser(userId)
+                val loggedInUserIsOwner = it.emailType.recordOwnedByCurrentUser(userId)
                 it.resolveEditDeleteRights(userScopes, EntityTypes.EMAIL_TYPE.labelText, loggedInUserIsOwner)
                 ResponseEntity(it, HttpStatus.OK)
             }
@@ -101,19 +101,19 @@ class EmailTypeController(
     @PatchMapping("{id}")
     fun updateItem(
         @PathVariable("id") id: Int,
-        @Valid @RequestBody command: UpdateEmailTypeCommand,
+        @Valid @RequestBody command: DeleteEmailTypeCommand,
         @RequestHeader(AppHeaders.X_USER_ID, required = false) userId: String?,
         @RequestHeader(AppHeaders.X_USER_SCOPES, required = false) userScopes: String?
     ): Mono<ResponseEntity<EmailTypeViewModel>> {
 
         command.id = id
 
-        return updateEmailTypeCommandHandler.updateItem(command, userId)
+        return deleteEmailTypeCommandHandler.updateItem(command, userId)
             .map {
                 it.resolveRequestStatus(RequestStatus.SUCCESSFUL)
                 it.resolveStatusMessage(ItemStatusMessage.UPDATE_ITEM_SUCCESSFUL)
 
-                val loggedInUserIsOwner = it.emailType.ownedByLoggedInUser(userId)
+                val loggedInUserIsOwner = it.emailType.recordOwnedByCurrentUser(userId)
                 it.resolveEditDeleteRights(userScopes, EntityTypes.EMAIL_TYPE.labelText, loggedInUserIsOwner)
                 ResponseEntity(it, HttpStatus.OK)
             }

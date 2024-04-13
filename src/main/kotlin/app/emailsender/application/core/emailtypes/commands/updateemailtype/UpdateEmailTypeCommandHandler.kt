@@ -1,13 +1,14 @@
 package app.emailsender.application.core.emailtypes.commands.updateemailtype
 
-import app.emailsender.application.core.emailtypes.queries.getemailtype.GetEmailTypeQuery
+import app.emailsender.application.core.emailtypes.viewmodels.EmailTypeDTO
 import app.emailsender.application.core.emailtypes.viewmodels.EmailTypeViewModel
-import app.emailsender.application.core.interfaces.GetItemQueryHandler
+import app.emailsender.application.core.interfaces.GetItemDTOHelper
 import app.emailsender.application.core.interfaces.UpdateItemCommandHandler
 import app.emailsender.application.enums.EntityTypes
 import app.emailsender.application.exceptions.BadRequestException
 import app.emailsender.application.exceptions.NoRecordException
 import app.emailsender.application.interfaces.DateTimeHelper
+import app.emailsender.domain.emailtypes.EmailType
 import app.emailsender.domain.updateAuditFields
 import app.emailsender.persistence.mysql.repositories.EmailTypeRepository
 import org.springframework.stereotype.Service
@@ -17,7 +18,7 @@ import reactor.core.publisher.Mono
 class UpdateEmailTypeCommandHandler(
     private val emailTypeRepository: EmailTypeRepository,
     private val dateTimeHelper: DateTimeHelper,
-    private val getItemQueryHandler: GetItemQueryHandler<GetEmailTypeQuery, EmailTypeViewModel>
+    private val getEmailTypeDTOHelper: GetItemDTOHelper<EmailType, EmailTypeDTO>
 ) : UpdateItemCommandHandler<UpdateEmailTypeCommand, EmailTypeViewModel> {
 
     override fun updateItem(command: UpdateEmailTypeCommand, userId: String?): Mono<EmailTypeViewModel> {
@@ -35,7 +36,7 @@ class UpdateEmailTypeCommandHandler(
         emailType.updateAuditFields(userId, dateTimeHelper.getCurrentDateTime())
 
         return emailTypeRepository.save(emailType)
-            .map { getItemQueryHandler.getItem(GetEmailTypeQuery(it.id)) }
-            .flatMap { it }
+            .map { getEmailTypeDTOHelper.toDTO(it) }
+            .map { EmailTypeViewModel(it) }
     }
 }

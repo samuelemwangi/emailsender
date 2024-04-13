@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotBlank
 data class CreateEmailTypeCommand(
     @NotBlank
     val type: String,
-
     @NotBlank
     val description: String
 ) : BaseCommand()

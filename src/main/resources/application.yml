@@ -5,6 +5,7 @@ logging:
   level:
     root: INFO
     org.springframework: INFO
+    io.asyncer.r2dbc.mysql.QUERY: DEBUG
     app.emailsender: DEBUG
 
 db:

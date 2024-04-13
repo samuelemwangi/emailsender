@@ -4,7 +4,9 @@ import app.emailsender.application.core.BaseEntityDTO
 import app.emailsender.application.core.BaseViewModel
 import app.emailsender.application.core.ItemDetailBaseViewModel
 import app.emailsender.application.core.ItemsBaseViewModel
+import app.emailsender.application.core.emailtypes.viewmodels.EmailTypeDTO
 import app.emailsender.domain.BaseEntity
+import app.emailsender.domain.emailtypes.EmailType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import java.time.LocalDateTime
@@ -137,6 +139,16 @@ fun BaseEntityDTO.validateDTOAuditFields(
         this.updatedBy,
         "updatedBy"
     )
+
+    return true
+}
+
+fun EmailTypeDTO.validateEmailTypeDTOFields(item: EmailType): Boolean {
+    validateEquals(item.id, this.id, "id")
+    validateEquals(item.type, this.type, "type")
+    validateEquals(item.description, this.description, "description")
+
+    this.validateDTOAuditFields(item)
 
     return true
 }
