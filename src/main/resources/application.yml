@@ -18,7 +18,7 @@ db:
     server-zone: ${DB_SERVER_ZONE}
 
 flyway:
-  locations: classpath:db/migration/mysql
+  locations: classpath:db/migrations/mysql
   baseline-on-migrate: true
 
 springdoc:

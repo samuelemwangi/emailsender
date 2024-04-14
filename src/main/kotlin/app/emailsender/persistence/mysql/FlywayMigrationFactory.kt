@@ -2,10 +2,13 @@ package app.emailsender.persistence.mysql
 
 import org.flywaydb.core.Flyway
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
+import org.springframework.stereotype.Component
 
-@Configuration
-class FlywayConfiguration(private val mysqlConfig: MysqlConfig) {
+@Component
+class FlywayMigrationFactory(
+    private val mysqlConfig: MysqlConfig,
+    private val flywayConfig: FlywayConfig
+) {
 
     @Bean(initMethod = "migrate")
     fun flyway(): Flyway {
@@ -15,6 +18,8 @@ class FlywayConfiguration(private val mysqlConfig: MysqlConfig) {
                 mysqlConfig.username,
                 mysqlConfig.password
             )
+            .locations(flywayConfig.locations)
+            .baselineOnMigrate(flywayConfig.baselineOnMigrate.toBoolean())
             .load()
     }
 }
