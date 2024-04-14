@@ -1,4 +1,4 @@
-FROM gradle:8.5-jdk17-alpine AS build
+FROM gradle:8.7-jdk17-alpine AS build
 WORKDIR /app
 COPY build.gradle.kts settings.gradle.kts gradlew /app/
 COPY gradle /app/gradle

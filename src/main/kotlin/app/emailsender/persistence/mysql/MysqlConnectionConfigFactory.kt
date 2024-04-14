@@ -56,13 +56,12 @@ class MysqlConnectionConfigFactory(private val mysqlConfig: MysqlConfig) : Abstr
     fun initializer(@Qualifier("mysqlConnectionFactory") connectionFactory: ConnectionFactory): ConnectionFactoryInitializer {
         val initializer = ConnectionFactoryInitializer()
         initializer.setConnectionFactory(connectionFactory)
-        initializer.setDatabasePopulator(databasePopulator())
         return initializer
     }
 
     private fun databasePopulator(): CompositeDatabasePopulator {
         val populator = CompositeDatabasePopulator()
-        populator.addPopulators(ResourceDatabasePopulator(ClassPathResource("db/tables_schema.sql")))
+        populator.addPopulators(ResourceDatabasePopulator(ClassPathResource("db/migration/mysql/V1__create_email_types_table.sql")))
         return populator
     }
 }

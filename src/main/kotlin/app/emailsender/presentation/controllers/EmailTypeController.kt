@@ -130,6 +130,7 @@ class EmailTypeController(
         @RequestHeader(AppHeaders.X_USER_ID, required = false) userId: String?,
         @RequestHeader(AppHeaders.X_USER_SCOPES, required = false) userScopes: String?,
     ): Mono<ResponseEntity<DeleteRecordViewModel>> {
+
         val command = DeleteEmailTypeCommand(id)
 
         return deleteEmailTypeCommandHandler.deleteItem(command, userId)
