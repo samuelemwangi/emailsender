@@ -73,10 +73,10 @@ services:
     image: mysql:8.0
     container_name: mysql_app_db
     environment:
-      MYSQL_ROOT_PASSWORD: ${COMPOSE_DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${COMPOSE_DB_NAME}
-      MYSQL_USER: ${COMPOSE_DB_USER}
-      MYSQL_PASSWORD: ${COMPOSE_DB_USER_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_USER_PASSWORD}
     networks:
       - services_network
     ports:
@@ -92,10 +92,10 @@ services:
     environment:
       DB_SERVER: db
       DB_PORT: 3306
-      DB_USER: ${COMPOSE_DB_USER}
-      DB_PASSWORD: ${COMPOSE_DB_USER_PASSWORD}
-      DB_NAME: ${COMPOSE_DB_NAME}
-      DB_SERVER_ZONE: ${COMPOSE_DB_SERVER_ZONE}
+      DB_USER: ${DB_USER}
+      DB_USER_PASSWORD: ${DB_USER_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_SERVER_ZONE: ${DB_SERVER_ZONE}
     ports:
       - "5001:8080"
     networks:

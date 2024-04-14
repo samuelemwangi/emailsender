@@ -24,6 +24,9 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     implementation("org.springframework.kafka:spring-kafka")
     implementation("io.asyncer:r2dbc-mysql:1.1.0")
+    implementation("com.mysql:mysql-connector-j:8.3.0")
+    implementation("org.flywaydb:flyway-core:10.11.0")
+    implementation("org.flywaydb:flyway-mysql:10.11.0")
     implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.5.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

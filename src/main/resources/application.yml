@@ -13,9 +13,13 @@ db:
     host: ${DB_SERVER}
     port: ${DB_PORT}
     username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    password: ${DB_USER_PASSWORD}
     database: ${DB_NAME}
     server-zone: ${DB_SERVER_ZONE}
+
+flyway:
+  locations: classpath:db/migrations/mysql
+  baseline-on-migrate: true
 
 springdoc:
   swagger-ui:
